@@ -2,9 +2,11 @@
 
 	require __DIR__ . '/../config/core.php';
 	require __DIR__ . '/../config/config.php';
-	
-	function allPhoto($request, $response) {
-		$sql =  "SELECT * FROM tbl_photos";
+	/*
+	*	a function to return photo record from
+	*/
+	function select_photo($request, $response) {
+		$sql =  "SELECT * FROM ".TBL_PHOTO;
 		try {
 			$stmt = openConnection()->query($sql);
 			$photos = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -32,11 +34,9 @@
 	}
 
 	function select_csv($uid){
-
 		$query = "SELECT * FROM tbl_csv WHERE uid = $uid";
 		$stmt = openConnection()->query($query);
 		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 		return $result;
 	}
 
@@ -74,7 +74,6 @@
 						}else{
 							$error_upload_type .= $_FILES['files']['name'][$key].', ';
 						}
-
 					}
 				}
 			}
@@ -82,9 +81,9 @@
 
 				$values = trim($values,',');
 				$database = openConnection();
+				
 				$query = "INSERT INTO tbl_photos (uid, sid, indexno, student_name, thumb) VALUES $values";
 				$stmt = $database->query($query); 
-
 				if($stmt){
 					$message = array(
 						'status' => true,
@@ -165,6 +164,73 @@
 				);
 				return $response->withJson($message);
 			}
+		}
+	}
+
+	function photo_by_uploader($request, $response) {
+
+		$userid = $request->getAttribute('uid');
+		$sql =  "SELECT * FROM tbl_photos WHERE uid = $userid ";
+		try {
+			$stmt = openConnection()->query($sql);
+			$photos = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$db = null;
+			return $response->withJson($photos);
+		} catch (PDOException $exception) {
+			$error = array( 'message' => $exception->getMessage());
+	      return $response->withJson($error);
+		}
+	}
+	function photo_school($request, $response) {
+
+		$name = $request->getAttribute('name');
+
+		$sql =  "SELECT * FROM TBL_PHOTO WHERE school = '$name'";
+		try {
+			$stmt = openConnection()->query($sql);
+			$photos = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$db = null;
+			return $response->withJson($photos);
+		} catch (PDOException $exception) {
+			$error = array( 'message' => $exception->getMessage());
+	      return $response->withJson($error);
+		}
+	}
+
+	function photo_student($request, $response) {
+		$indexno = $request->getAttribute('indexno');
+		$sql =  "SELECT * FROM TBL_PHOTO WHERE id = $indexno ";
+		try {
+			$stmt = openConnection()->query($sql);
+			$photo = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$db = null;
+			return $response->withJson($photo);
+		} catch (PDOException $exception) {
+			$error = array( 'message' => $exception->getMessage());
+	      return $response->withJson($error);
+		}
+	}
+
+	function list_students($request, $response) {
+		$uid = $request->getAttribute('uid');
+
+		$query = "SELECT * FROM tbl_csv WHERE uid = $uid";
+		$stmt = openConnection()->query($query);
+		$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $response->withJson($result);
+	}
+	function list_photos($request, $response) {
+		$uid = $request->getAttribute('uid');
+
+		$sql =  "SELECT * FROM TBL_PHOTO WHERE uid = $uid";
+		try {
+			$stmt = openConnection()->query($sql);
+			$photos = $stmt->fetchAll(PDO::FETCH_OBJ);
+			$db = null;
+			return $response->withJson($photos);
+		} catch (PDOException $exception) {
+			$error = array( 'message' => $exception->getMessage());
+	      return $response->withJson($error);
 		}
 	}
 

@@ -1,8 +1,10 @@
 {
     "require": {
         "slim/slim": "^3.0",
-        "palanik/corsslim": "*",
         "tuupola/cors-middleware": "^0.9.2",
+        "monolog/monolog": "^1.17",
+        "palanik/corsslim": "dev-slim3",
+        "tuupola/slim-jwt-auth": "^3.1",
         "setasign/fpdf": "^1.8"
     }
 }
