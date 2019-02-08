@@ -1,5 +1,8 @@
 {
     "require": {
-        "slim/slim": "^3.0"
+        "slim/slim": "^3.0",
+        "palanik/corsslim": "*",
+        "tuupola/cors-middleware": "^0.9.2",
+        "setasign/fpdf": "^1.8"
     }
 }
